@@ -69,7 +69,7 @@ h1.main{font-size:clamp(38px,7vw,70px);font-weight:900;line-height:1.0;letter-sp
 .how{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:56px;max-width:760px;width:100%;}
 .how-step{text-align:center;flex:1;min-width:130px;}
 .how-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-family:'Space Mono',monospace;font-weight:700;font-size:15px;color:#000;}
-.how-t{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff;margin-bottom:5px;}
+.how-step{.how-t{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff;margin-bottom:5px;}
 .how-d{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);line-height:1.6;}
 
 /* GEO BANNER */
@@ -437,7 +437,8 @@ function escHtml(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace
 // ── MARKDOWN RENDERER ──
 function renderMD(text){
   return text
-    .replace(/```(\w+)?\n?([\s\S]*?)```/g, (_, lang, code) =>
+    .replace(/```(\w+)?\n?([\s\S]*?)
+```/g, (_, lang, code) =>
       `<div class="cb"><div class="cl">${lang||'code'}</div><pre><code>${escHtml(code.trim())}</code></pre></div>`)
     .replace(/^### (.+)$/gm,'<h3>$1</h3>')
     .replace(/^## (.+)$/gm,'<h2>$1</h2>')
@@ -492,8 +493,8 @@ function setBusy(b){
 
 // ── FRONTEND SE API BILKUL KHATAM — AB YEH SEEDHA BACKEND SE CONNECT HOGA ──
 async function callAI(msgs) {
-  // TODO: Jab backend deploy ho jaye, to 'http://localhost:5000' ki jagah apna Render URL likh lena
-  const BACKEND_URL = 'http://localhost:5000'; 
+  // Aapka live production Vercel link yahan securely configure ho gaya hai!
+  const BACKEND_URL = 'https://xgpt-backend.vercel.app'; 
   const ENDPOINT = `${BACKEND_URL}/api/chat`;
 
   const response = await fetch(ENDPOINT, {
