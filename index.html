@@ -57,8 +57,8 @@ h1.main{font-size:clamp(38px,7vw,70px);font-weight:900;line-height:1.0;letter-sp
 .section-label{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;margin-bottom:22px;}
 
 /* SERVICES GRID */
-.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;max-width:840px;}
-.scard{background:var(--card);border-radius:13px;padding:20px 16px;text-align:left;position:relative;overflow:hidden;}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;width:100%;max-width:840px;margin-bottom:30px;}
+.scard{background:var(--card);border-radius:13px;padding:20px 16px;text-align:left;position:relative;overflow:hidden;border:1px solid rgba(0,212,255,.14);cursor:none;}
 .scard::after{content:'';position:absolute;top:-100%;left:0;right:0;height:40%;background:linear-gradient(transparent,rgba(0,212,255,.03),transparent);animation:scanline 4s linear infinite;pointer-events:none;}
 .scard-icon{font-size:26px;margin-bottom:10px;display:block;}
 .scard-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff;margin-bottom:5px;}
@@ -301,23 +301,25 @@ let currentSvc = null;
 let chatMessages = [];
 let isBusy = false;
 
-// BUILD CARDS
+// ── BUILD CARDS (FIXED INITIALIZATION) ──
 const grid = document.getElementById('svc-grid');
-SERVICES.forEach((s,i) => {
-  const card = document.createElement('div');
-  card.className = 'scard hover fu';
-  card.style.cssText = `border:1px solid rgba(${s.rgb},.14);animation-delay:${.04*i}s;cursor:none;`;
-  card.innerHTML = `
-    <span class="scard-icon">${s.icon}</span>
-    <div class="scard-title">${s.label}</div>
-    <div class="scard-desc">${s.desc}</div>
-    <div class="scard-cta" style="color:${s.color}">FREE MILEGA ↗</div>
-  `;
-  card.onclick = () => startService(s);
-  card.onmouseenter = () => { card.style.borderColor = `rgba(${s.rgb},.5)`; };
-  card.onmouseleave = () => { card.style.borderColor = `rgba(${s.rgb},.14)`; };
-  grid.appendChild(card);
-});
+if(grid) {
+  SERVICES.forEach((s,i) => {
+    const card = document.createElement('div');
+    card.className = 'scard hover fu';
+    card.style.cssText = `border:1px solid rgba(${s.rgb},.14);animation-delay:${.04*i}s;cursor:none;`;
+    card.innerHTML = `
+      <span class="scard-icon">${s.icon}</span>
+      <div class="scard-title">${s.label}</div>
+      <div class="scard-desc">${s.desc}</div>
+      <div class="scard-cta" style="color:${s.color}">FREE MILEGA ↗</div>
+    `;
+    card.onclick = () => startService(s);
+    card.onmouseenter = () => { card.style.borderColor = `rgba(${s.rgb},.5)`; };
+    card.onmouseleave = () => { card.style.borderColor = `rgba(${s.rgb},.14)`; };
+    grid.appendChild(card);
+  });
+}
 
 // CUSTOM CURSOR
 const cur = document.getElementById('cur');
@@ -325,39 +327,45 @@ const ring = document.getElementById('ring');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove', e => {
   mx=e.clientX; my=e.clientY;
-  cur.style.left=mx+'px'; cur.style.top=my+'px';
+  if(cur) { cur.style.left=mx+'px'; cur.style.top=my+'px'; }
 });
 (function anim(){
   rx+=(mx-rx)*.12; ry+=(my-ry)*.12;
-  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  if(ring) { ring.style.left=rx+'px'; ring.style.top=ry+'px'; }
   requestAnimationFrame(anim);
 })();
-document.querySelectorAll('button,a,.scard,input,textarea').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{cur.style.transform='translate(-50%,-50%) scale(2)';});
-  el.addEventListener('mouseleave',()=>{cur.style.transform='translate(-50%,-50%) scale(1)';});
-});
+
+function setupCursorListeners() {
+  document.querySelectorAll('button,a,.scard,input,textarea').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ if(cur) cur.style.transform='translate(-50%,-50%) scale(2)';});
+    el.addEventListener('mouseleave',()=>{ if(cur) cur.style.transform='translate(-50%,-50%) scale(1)';});
+  });
+}
+setTimeout(setupCursorListeners, 500);
 
 // PARTICLE CANVAS
 const canvas = document.getElementById('cv');
-const ctx = canvas.getContext('2d');
-let W,H,pts=[];
-function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
-resize(); window.addEventListener('resize',resize);
-for(let i=0;i<80;i++) pts.push({x:Math.random()*1920,y:Math.random()*1080,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,life:Math.random(),r:Math.random()*1.5+.5});
-(function drawCanvas(){
-  ctx.clearRect(0,0,W,H);
-  pts.forEach(p=>{
-    p.x+=p.vx; p.y+=p.vy; p.life+=.004;
-    if(p.x<0||p.x>W||p.y<0||p.y>H||p.life>1){p.x=Math.random()*W;p.y=Math.random()*H;p.life=0;}
-    const a=Math.sin(p.life*Math.PI)*.3;
-    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(0,212,255,${a})`;ctx.fill();
-  });
-  for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
-    const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
-    if(d<120){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(0,212,255,${.04*(1-d/120)})`;ctx.lineWidth=.5;ctx.stroke();}
-  }
-  requestAnimationFrame(drawCanvas);
-})();
+if(canvas) {
+  const ctx = canvas.getContext('2d');
+  let W,H,pts=[];
+  function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+  resize(); window.addEventListener('resize',resize);
+  for(let i=0;i<80;i++) pts.push({x:Math.random()*1920,y:Math.random()*1080,vx:(Math.random()-.5)*.4,vy:(Math.random()-.5)*.4,life:Math.random(),r:Math.random()*1.5+.5});
+  (function drawCanvas(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.life+=.004;
+      if(p.x<0||p.x>W||p.y<0||p.y>H||p.life>1){p.x=Math.random()*W;p.y=Math.random()*H;p.life=0;}
+      const a=Math.sin(p.life*Math.PI)*.3;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(0,212,255,${a})`;ctx.fill();
+    });
+    for(let i=0;i<pts.length;i++) for(let j=i+1;j<pts.length;j++){
+      const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(0,212,255,${.04*(1-d/120)})`;ctx.lineWidth=.5;ctx.stroke();}
+    }
+    requestAnimationFrame(drawCanvas);
+  })();
+}
 
 // PAGES CONTROL
 function showHome(){
@@ -394,6 +402,7 @@ function startService(svc){
 
   // Welcome banner message
   const welcome = `👋 **XGPT mein Khush Aaye!**\n\nMain **NEXUS** hoon — **${svc.label}** ke liye aapka AI expert.\n\nMain **asli kaam** karta hoon — poora professional output deta hoon, sirf explanation nahi.\n\n**Aap kya chahte hain?**\n- SEO ke liye: website URL share karein\n- Code ke liye: kya banana hai describe karein\n- Content ke liye: topic aur keywords dein\n- Automation ke liye: task describe karein\n\nBas type karein — main seconds mein deliver karta hoon ⚡\n\n✅ Delivered by XGPT | Powered by Zaheer Zaheer AI Systems`;
+  document.getElementById('messages').innerHTML = '';
   addBotMessage(welcome);
   document.getElementById('msg-inp').focus();
 }
@@ -439,7 +448,6 @@ function removeTyping(){ const el=document.getElementById('typing-msg'); if(el)e
 function scrollBottom(){ const m=document.getElementById('messages'); m.scrollTop=m.scrollHeight; }
 function escHtml(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// RENDER MARKDOWN WITH PRISM STYLE
 function renderMD(text){
   return text
     .replace(/```(\w+)?\n?([\s\S]*?)
@@ -459,7 +467,7 @@ function renderMD(text){
     .replace(/\n/g,'<br>');
 }
 
-// ASYNC FETCH HANDLER WITH SEAMLESS VERCEL CONNECTION
+// ASYNC FETCH HANDLER
 async function sendMsg(){
   const inp = document.getElementById('msg-inp');
   const text = inp.value.trim();
@@ -479,7 +487,7 @@ async function sendMsg(){
       body: JSON.stringify({
         message: text,
         service: currentSvc ? currentSvc.id : 'general',
-        history: chatMessages.slice(0, -1) // Sending previous turns
+        history: chatMessages.slice(0, -1)
       })
     });
 
@@ -490,8 +498,7 @@ async function sendMsg(){
     const data = await response.json();
     removeTyping();
     
-    // Fallback if structure varies slightly
-    const reply = data.reply || data.response || data.choices?.[0]?.message?.content || "No structured response received.";
+    const reply = data.reply || data.response || data.choices?.[0]?.message?.content || "No response field matched from backend.";
     
     addBotMessage(reply);
     chatMessages.push({role:'assistant',content:reply});
@@ -502,6 +509,7 @@ async function sendMsg(){
     isBusy=false;
     setBusy(false);
     inp.focus();
+    setupCursorListeners();
   }
 }
 
@@ -509,12 +517,13 @@ function setBusy(b){
   const btn = document.getElementById('send-btn');
   const icon = document.getElementById('send-icon');
   const spin = document.getElementById('spinner');
-  btn.disabled = b;
-  icon.style.display = b?'none':'block';
-  spin.style.display = b?'block':'none';
+  if(btn && icon && spin) {
+    btn.disabled = b;
+    icon.style.display = b?'none':'block';
+    spin.style.display = b?'block':'none';
+  }
 }
 
-// INPUT ENTER EMULATOR
 document.getElementById('msg-inp').addEventListener('keydown', e=>{
   if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMsg(); }
 });
