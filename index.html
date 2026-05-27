@@ -69,8 +69,8 @@ h1.main{font-size:clamp(38px,7vw,70px);font-weight:900;line-height:1.0;letter-sp
 .how{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:56px;max-width:760px;width:100%;}
 .how-step{text-align:center;flex:1;min-width:130px;}
 .how-num{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;margin:0 auto 10px;font-family:'Space Mono',monospace;font-weight:700;font-size:15px;color:#000;}
-.how-step{.how-t{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff;margin-bottom:5px;}
-.how-d{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);line-height:1.6;}
+.how-step .how-t{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff;margin-bottom:5px;}
+.how-step .how-d{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);line-height:1.6;}
 
 /* GEO BANNER */
 .geo{margin-top:48px;max-width:640px;width:100%;background:rgba(0,212,255,.04);border:1px solid rgba(0,212,255,.13);border-radius:14px;padding:22px 26px;text-align:left;}
@@ -148,11 +148,14 @@ textarea#msg-inp:focus{border-color:rgba(0,212,255,.45);}
 </head>
 <body>
 
+<!-- CURSOR -->
 <div id="cur"></div>
 <div id="ring"></div>
 
+<!-- PARTICLE BG -->
 <canvas id="cv"></canvas>
 
+<!-- ═══ NAV ═══ -->
 <nav>
   <div class="logo" onclick="showHome()">Xgpt</div>
   <div class="nav-right">
@@ -164,9 +167,9 @@ textarea#msg-inp:focus{border-color:rgba(0,212,255,.45);}
   </div>
 </nav>
 
+<!-- ═══ HOME PAGE ═══ -->
 <div id="home">
   <div class="hero">
-
     <div class="badge fu">
       <span class="dot"></span>
       150 AI AGENTS ONLINE — ALL SERVICES FREE
@@ -198,11 +201,13 @@ textarea#msg-inp:focus{border-color:rgba(0,212,255,.45);}
       <div><div class="stat-n">FREE</div><div class="stat-l">Forever</div></div>
     </div>
 
+    <!-- SERVICES -->
     <div class="fu" style="animation-delay:.26s;width:100%;max-width:840px;">
       <div class="section-label">— FREE SERVICE CHUNNO —</div>
       <div class="sgrid" id="svc-grid"></div>
     </div>
 
+    <!-- HOW IT WORKS -->
     <div class="fu" style="animation-delay:.3s;width:100%;max-width:760px;text-align:center;margin-top:60px;">
       <div class="section-label">— KAISE KAAM KARTA HAI —</div>
       <div class="how">
@@ -213,6 +218,7 @@ textarea#msg-inp:focus{border-color:rgba(0,212,255,.45);}
       </div>
     </div>
 
+    <!-- GEO BANNER -->
     <div class="geo fu" style="animation-delay:.34s;">
       <div class="geo-label">🔍 AI SEARCH VISIBILITY — GEO OPTIMIZED</div>
       <div class="geo-title">ChatGPT, Gemini & Perplexity Recommend Karte Hain</div>
@@ -223,13 +229,14 @@ textarea#msg-inp:focus{border-color:rgba(0,212,255,.45);}
   </div>
 </div>
 
+<!-- ═══ CHAT PAGE ═══ -->
 <div id="chat-page">
   <div class="chat-head">
     <button class="back-btn btn" onclick="showHome()">← Wapas</button>
     <div id="svc-icon" style="font-size:20px;"></div>
     <div>
       <div class="svc-name" id="svc-title">Service</div>
-      <div class="svc-status"><span class="dot" style="width:5px;height:5px;"></span>NEXUS AI — SECURE BACKEND</div>
+      <div class="svc-status"><span class="dot" style="width:5px;height:5px;"></span>NEXUS AI — 100% FREE</div>
     </div>
     <div style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;color:#1a2a38;">XGPT by Zaheer Zaheer</div>
   </div>
@@ -245,15 +252,17 @@ textarea#msg-inp:focus{border-color:rgba(0,212,255,.45);}
         <span class="spinner" id="spinner"></span>
       </button>
     </div>
-    <div class="inp-hint">Enter = Send · Shift+Enter = New Line · 100% SECURE · XGPT by Zaheer Zaheer</div>
+    <div class="inp-hint">Enter = Send · Shift+Enter = New Line · 100% FREE · XGPT by Zaheer Zaheer</div>
   </div>
 </div>
 
 <script>
 // ═══════════════════════════════════════
-// XGPT — COMPLETE AI PLATFORM
+// XGPT — FIXED BACKEND INTEGRATION
 // Zaheer Zaheer AI Systems
 // ═══════════════════════════════════════
+
+const BACKEND_URL = 'https://xgpt-backend.vercel.app/api/chat';
 
 const SERVICES = [
   {id:"seo",icon:"📈",label:"SEO & GEO Audit",color:"#00d4ff",rgb:"0,212,255",desc:"Full website SEO + AI search optimization report"},
@@ -288,17 +297,16 @@ const PLACEHOLDERS = {
   api:"Integration describe karein... e.g. 'Stripe to Node.js connect'",
 };
 
-// ── STATE ──
 let currentSvc = null;
-let messages = [];
+let chatMessages = [];
 let isBusy = false;
 
-// ── BUILD SERVICE CARDS ──
+// BUILD CARDS
 const grid = document.getElementById('svc-grid');
 SERVICES.forEach((s,i) => {
   const card = document.createElement('div');
   card.className = 'scard hover fu';
-card.style.cssText = `border:1px solid rgba(${s.rgb},.14);animation-delay:${.04*i}s;cursor:none;`;
+  card.style.cssText = `border:1px solid rgba(${s.rgb},.14);animation-delay:${.04*i}s;cursor:none;`;
   card.innerHTML = `
     <span class="scard-icon">${s.icon}</span>
     <div class="scard-title">${s.label}</div>
@@ -311,7 +319,7 @@ card.style.cssText = `border:1px solid rgba(${s.rgb},.14);animation-delay:${.04*
   grid.appendChild(card);
 });
 
-// ── CURSOR ──
+// CUSTOM CURSOR
 const cur = document.getElementById('cur');
 const ring = document.getElementById('ring');
 let mx=0,my=0,rx=0,ry=0;
@@ -329,7 +337,7 @@ document.querySelectorAll('button,a,.scard,input,textarea').forEach(el=>{
   el.addEventListener('mouseleave',()=>{cur.style.transform='translate(-50%,-50%) scale(1)';});
 });
 
-// ── PARTICLE CANVAS ──
+// PARTICLE CANVAS
 const canvas = document.getElementById('cv');
 const ctx = canvas.getContext('2d');
 let W,H,pts=[];
@@ -351,15 +359,11 @@ for(let i=0;i<80;i++) pts.push({x:Math.random()*1920,y:Math.random()*1080,vx:(Ma
   requestAnimationFrame(drawCanvas);
 })();
 
-window.addEventListener('scroll',()=>{
-  document.querySelector('nav').style.background = window.scrollY>40 ? 'rgba(2,4,8,.96)' : 'rgba(2,4,8,.88)';
-});
-
-// ── PAGES ──
+// PAGES CONTROL
 function showHome(){
   document.getElementById('home').style.display='block';
   document.getElementById('chat-page').classList.remove('show');
-  messages=[];
+  chatMessages=[];
   document.getElementById('messages').innerHTML='';
   currentSvc=null;
   isBusy=false;
@@ -369,15 +373,16 @@ function showChat(){
   document.getElementById('chat-page').classList.add('show');
 }
 
-// ── START SERVICE ──
+// START SERVICE
 function startService(svc){
   currentSvc = svc;
-  messages = [];
+  chatMessages = [];
   showChat();
   document.getElementById('svc-icon').textContent = svc.icon;
   document.getElementById('svc-title').textContent = svc.label;
   document.getElementById('msg-inp').placeholder = PLACEHOLDERS[svc.id]||'Type karo...';
 
+  // Quick prompts
   const qp = document.getElementById('qprompts');
   qp.innerHTML = '<span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;color:#1a2a38;flex-shrink:0;">QUICK:</span>';
   (PROMPTS[svc.id]||[]).forEach(p=>{
@@ -387,12 +392,13 @@ function startService(svc){
     qp.appendChild(btn);
   });
 
-  const welcome = `👋 **XGPT mein Khush Aaye!**\n\nMain **NEXUS** hoon — **${svc.label}** ke liye aapka AI expert.\n\nMain **asli kaam** karta hoon — poora professional output deta hoon, sirf explanation nahi.\n\nBas type karein — main seconds mein deliver karta hoon ⚡\n\n✅ Delivered by XGPT | Powered by Zaheer Zaheer AI Systems`;
+  // Welcome banner message
+  const welcome = `👋 **XGPT mein Khush Aaye!**\n\nMain **NEXUS** hoon — **${svc.label}** ke liye aapka AI expert.\n\nMain **asli kaam** karta hoon — poora professional output deta hoon, sirf explanation nahi.\n\n**Aap kya chahte hain?**\n- SEO ke liye: website URL share karein\n- Code ke liye: kya banana hai describe karein\n- Content ke liye: topic aur keywords dein\n- Automation ke liye: task describe karein\n\nBas type karein — main seconds mein deliver karta hoon ⚡\n\n✅ Delivered by XGPT | Powered by Zaheer Zaheer AI Systems`;
   addBotMessage(welcome);
   document.getElementById('msg-inp').focus();
 }
 
-// ── MESSAGES ──
+// MESSAGES UI INTERACTION
 function addUserMessage(text){
   const div = document.createElement('div');
   div.className='msg user';
@@ -401,19 +407,18 @@ function addUserMessage(text){
   scrollBottom();
 }
 
-function addBotMessage(md, streaming=false){
+function addBotMessage(md){
   const div = document.createElement('div');
   div.className='msg bot';
   div.innerHTML=`
     <div class="bot-label">
-      <div class="bot-avatar" ${streaming?'style="animation:glow 1s infinite"':''}>N</div>
-      <span class="bot-name-lbl">${streaming?'⚡ Generating...':'NEXUS AI'}</span>
+      <div class="bot-avatar">N</div>
+      <span class="bot-name-lbl">NEXUS AI</span>
     </div>
     <div class="bot-bubble"><div class="md">${renderMD(md)}</div></div>
   `;
   document.getElementById('messages').appendChild(div);
   scrollBottom();
-  return div;
 }
 
 function addTyping(){
@@ -434,7 +439,7 @@ function removeTyping(){ const el=document.getElementById('typing-msg'); if(el)e
 function scrollBottom(){ const m=document.getElementById('messages'); m.scrollTop=m.scrollHeight; }
 function escHtml(t){ return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// ── MARKDOWN RENDERER ──
+// RENDER MARKDOWN WITH PRISM STYLE
 function renderMD(text){
   return text
     .replace(/```(\w+)?\n?([\s\S]*?)
@@ -454,7 +459,7 @@ function renderMD(text){
     .replace(/\n/g,'<br>');
 }
 
-// ── SEND MESSAGE ──
+// ASYNC FETCH HANDLER WITH SEAMLESS VERCEL CONNECTION
 async function sendMsg(){
   const inp = document.getElementById('msg-inp');
   const text = inp.value.trim();
@@ -464,17 +469,35 @@ async function sendMsg(){
   setBusy(true);
 
   addUserMessage(text);
-  messages.push({role:'user',content:text});
+  chatMessages.push({role:'user',content:text});
   addTyping();
 
   try {
-    const reply = await callAI(messages);
+    const response = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: text,
+        service: currentSvc ? currentSvc.id : 'general',
+        history: chatMessages.slice(0, -1) // Sending previous turns
+      })
+    });
+
+    if(!response.ok) {
+      throw new Error(`Server returned HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
     removeTyping();
+    
+    // Fallback if structure varies slightly
+    const reply = data.reply || data.response || data.choices?.[0]?.message?.content || "No structured response received.";
+    
     addBotMessage(reply);
-    messages.push({role:'assistant',content:reply});
+    chatMessages.push({role:'assistant',content:reply});
   } catch(e){
     removeTyping();
-    addBotMessage('⚠️ **Connection Error.** Please try again.\n\nBackend server se connection nahi ho saka.');
+    addBotMessage('⚠️ **System Connection Error:** Backend pipeline se contact nahi ho pa raha. Code structure up-to-date hai, bas check karein aapka Vercel backend server live chal raha hai ya nahi.\n\n**Details:** ' + e.message);
   } finally {
     isBusy=false;
     setBusy(false);
@@ -491,28 +514,7 @@ function setBusy(b){
   spin.style.display = b?'block':'none';
 }
 
-// ── FRONTEND SE API BILKUL KHATAM — AB YEH SEEDHA BACKEND SE CONNECT HOGA ──
-async function callAI(msgs) {
-  // Aapka live production Vercel link yahan securely configure ho gaya hai!
-  const BACKEND_URL = 'https://xgpt-backend.vercel.app'; 
-  const ENDPOINT = `${BACKEND_URL}/api/chat`;
-
-  const response = await fetch(ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages: msgs, service: currentSvc ? currentSvc.id : 'general' })
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.error || 'Server Error');
-  }
-
-  const data = await response.json();
-  return data.reply || 'Response unavailable.';
-}
-
-// ── ENTER KEY ──
+// INPUT ENTER EMULATOR
 document.getElementById('msg-inp').addEventListener('keydown', e=>{
   if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMsg(); }
 });
