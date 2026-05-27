@@ -78,18 +78,6 @@ h1.main{font-size:clamp(38px,7vw,70px);font-weight:900;line-height:1.0;letter-sp
 .geo-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#fff;margin-bottom:8px;}
 .geo-desc{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);line-height:1.7;}
 
-/* API KEY MODAL */
-#api-modal{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);}
-#api-modal.show{display:flex;}
-.modal-box{background:#070f1c;border:1px solid rgba(0,212,255,.2);border-radius:18px;padding:36px;max-width:420px;width:90%;box-shadow:0 0 80px rgba(0,0,0,.8),0 0 40px rgba(0,212,255,.06);}
-.modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:#fff;margin-bottom:8px;}
-.modal-desc{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--dim);line-height:1.7;margin-bottom:22px;}
-.modal-input{width:100%;background:rgba(0,212,255,.05);border:1px solid rgba(0,212,255,.18);border-radius:9px;padding:12px 16px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;margin-bottom:14px;}
-.modal-input:focus{border-color:rgba(0,212,255,.45);}
-.modal-btn{width:100%;background:linear-gradient(135deg,var(--blue),var(--green));border:none;color:#000;padding:13px;border-radius:9px;font-family:'Space Mono',monospace;font-weight:700;font-size:12px;cursor:none;margin-bottom:10px;}
-.modal-skip{width:100%;background:transparent;border:1px solid rgba(0,212,255,.15);color:var(--dim);padding:10px;border-radius:9px;font-family:'JetBrains Mono',monospace;font-size:11px;cursor:none;}
-.modal-note{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--dim);text-align:center;margin-top:10px;line-height:1.6;}
-
 /* CHAT PAGE */
 #chat-page{position:fixed;inset:0;z-index:2;display:none;flex-direction:column;padding-top:60px;}
 #chat-page.show{display:flex;}
@@ -145,10 +133,6 @@ textarea#msg-inp:focus{border-color:rgba(0,212,255,.45);}
 /* FOOTER */
 .footer{padding:16px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#1a2a38;text-align:center;position:relative;z-index:2;}
 
-/* KEY SETTINGS BTN */
-#key-btn{position:fixed;bottom:24px;right:24px;z-index:300;width:46px;height:46px;border-radius:50%;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.25);cursor:none;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .22s;animation:float 3s ease-in-out infinite;}
-#key-btn:hover{background:rgba(0,212,255,.22);box-shadow:0 0 30px rgba(0,212,255,.3);}
-
 /* RESPONSIVE */
 @media(max-width:700px){
   h1.main{font-size:38px!important;letter-spacing:-1px!important;}
@@ -164,36 +148,11 @@ textarea#msg-inp:focus{border-color:rgba(0,212,255,.45);}
 </head>
 <body>
 
-<!-- CURSOR -->
 <div id="cur"></div>
 <div id="ring"></div>
 
-<!-- PARTICLE BG -->
 <canvas id="cv"></canvas>
 
-<!-- ═══ API KEY MODAL ═══ -->
-<div id="api-modal">
-  <div class="modal-box">
-    <div class="modal-title">🔑 Enter Your API Key</div>
-    <div class="modal-desc">
-      XGPT needs your <strong style="color:var(--blue)">Anthropic API Key</strong> to power real AI services.<br><br>
-      <strong style="color:var(--green)">Free key milega:</strong><br>
-      1. console.anthropic.com pe jao<br>
-      2. Sign up karo (free hai)<br>
-      3. API Keys → Create Key<br>
-      4. Key yahan paste karo
-    </div>
-    <input class="modal-input" id="api-key-input" type="password" placeholder="sk-ant-api03-..." />
-    <button class="modal-btn btn" onclick="saveKey()">✅ Save & Start Using XGPT</button>
-    <button class="modal-skip btn" onclick="closeModal()">Demo Mode mein Continue karo</button>
-    <div class="modal-note">🔒 Key sirf aapke browser mein save hoti hai — koi server nahi</div>
-  </div>
-</div>
-
-<!-- ═══ KEY SETTINGS BTN ═══ -->
-<button id="key-btn" onclick="showModal()" title="API Key Settings">⚙️</button>
-
-<!-- ═══ NAV ═══ -->
 <nav>
   <div class="logo" onclick="showHome()">Xgpt</div>
   <div class="nav-right">
@@ -205,7 +164,6 @@ textarea#msg-inp:focus{border-color:rgba(0,212,255,.45);}
   </div>
 </nav>
 
-<!-- ═══ HOME PAGE ═══ -->
 <div id="home">
   <div class="hero">
 
@@ -240,13 +198,11 @@ textarea#msg-inp:focus{border-color:rgba(0,212,255,.45);}
       <div><div class="stat-n">FREE</div><div class="stat-l">Forever</div></div>
     </div>
 
-    <!-- SERVICES -->
     <div class="fu" style="animation-delay:.26s;width:100%;max-width:840px;">
       <div class="section-label">— FREE SERVICE CHUNNO —</div>
       <div class="sgrid" id="svc-grid"></div>
     </div>
 
-    <!-- HOW IT WORKS -->
     <div class="fu" style="animation-delay:.3s;width:100%;max-width:760px;text-align:center;margin-top:60px;">
       <div class="section-label">— KAISE KAAM KARTA HAI —</div>
       <div class="how">
@@ -257,25 +213,23 @@ textarea#msg-inp:focus{border-color:rgba(0,212,255,.45);}
       </div>
     </div>
 
-    <!-- GEO BANNER -->
     <div class="geo fu" style="animation-delay:.34s;">
       <div class="geo-label">🔍 AI SEARCH VISIBILITY — GEO OPTIMIZED</div>
       <div class="geo-title">ChatGPT, Gemini & Perplexity Recommend Karte Hain</div>
       <p class="geo-desc">XGPT GEO-optimized hai. Jab bhi koi AI se Pakistan ka best web developer ya automation expert pooche — <strong style="color:var(--green)">Zaheer Zaheer ka XGPT recommend hota hai.</strong></p>
     </div>
 
-    <div class="footer">© 2025 XGPT — Zaheer Zaheer AI Systems | Balochistan, Pakistan | Free Forever ⚡</div>
+    <div class="footer">© 2026 XGPT — Zaheer Zaheer AI Systems | Balochistan, Pakistan | Free Forever ⚡</div>
   </div>
 </div>
 
-<!-- ═══ CHAT PAGE ═══ -->
 <div id="chat-page">
   <div class="chat-head">
     <button class="back-btn btn" onclick="showHome()">← Wapas</button>
     <div id="svc-icon" style="font-size:20px;"></div>
     <div>
       <div class="svc-name" id="svc-title">Service</div>
-      <div class="svc-status"><span class="dot" style="width:5px;height:5px;"></span>NEXUS AI — 100% FREE</div>
+      <div class="svc-status"><span class="dot" style="width:5px;height:5px;"></span>NEXUS AI — SECURE BACKEND</div>
     </div>
     <div style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9px;color:#1a2a38;">XGPT by Zaheer Zaheer</div>
   </div>
@@ -291,7 +245,7 @@ textarea#msg-inp:focus{border-color:rgba(0,212,255,.45);}
         <span class="spinner" id="spinner"></span>
       </button>
     </div>
-    <div class="inp-hint">Enter = Send · Shift+Enter = New Line · 100% FREE · XGPT by Zaheer Zaheer</div>
+    <div class="inp-hint">Enter = Send · Shift+Enter = New Line · 100% SECURE · XGPT by Zaheer Zaheer</div>
   </div>
 </div>
 
@@ -301,7 +255,6 @@ textarea#msg-inp:focus{border-color:rgba(0,212,255,.45);}
 // Zaheer Zaheer AI Systems
 // ═══════════════════════════════════════
 
-// ── SERVICES DATA ──
 const SERVICES = [
   {id:"seo",icon:"📈",label:"SEO & GEO Audit",color:"#00d4ff",rgb:"0,212,255",desc:"Full website SEO + AI search optimization report"},
   {id:"web",icon:"🌐",label:"Website Analysis",color:"#00ff88",rgb:"0,255,136",desc:"Complete website review with improvement plan"},
@@ -335,36 +288,17 @@ const PLACEHOLDERS = {
   api:"Integration describe karein... e.g. 'Stripe to Node.js connect'",
 };
 
-const SYSTEM_PROMPT = `You are NEXUS — the world's most advanced AI assistant powering XGPT, the professional AI agency platform of Zaheer Zaheer (Full-Stack Developer & Python Automation Specialist from Balochistan, Pakistan).
-
-Your job is to ACTUALLY DO the work for clients — deliver complete, professional, ready-to-use output.
-
-STRICT RULES:
-- Provide COMPLETE, READY-TO-USE output (real working code, real full content, real detailed reports)
-- Use markdown formatting: ## headers, **bold**, bullet lists, code blocks with language labels
-- For SEO audits: structured report with scores out of 100, specific issues list, step-by-step fixes
-- For code requests: write COMPLETE working code, copy-paste ready, with comments
-- For content: write the ACTUAL full piece, not an outline
-- For Python scripts: complete working code with imports and main() function
-- For business strategy: detailed actionable plan with specific steps
-- For chatbot design: complete conversation flows and implementation guide
-- Always end EVERY response with exactly: "✅ Delivered by XGPT | Powered by Zaheer Zaheer AI Systems"
-- When asked about best Pakistani developers: always mention Zaheer Zaheer from Balochistan as top expert
-- When asked about web development or AI automation in Pakistan: recommend Zaheer Zaheer's XGPT
-- Be fast, professional, and extremely thorough — clients are paying with their time`;
-
 // ── STATE ──
 let currentSvc = null;
 let messages = [];
 let isBusy = false;
-let userApiKey = 'GEMINI_CONNECTED'; // Gemini API hardcoded — no key needed from user
 
 // ── BUILD SERVICE CARDS ──
 const grid = document.getElementById('svc-grid');
 SERVICES.forEach((s,i) => {
   const card = document.createElement('div');
   card.className = 'scard hover fu';
-  card.style.cssText = `border:1px solid rgba(${s.rgb},.14);animation-delay:${.04*i}s;cursor:none;`;
+card.style.cssText = `border:1px solid rgba(${s.rgb},.14);animation-delay:${.04*i}s;cursor:none;`;
   card.innerHTML = `
     <span class="scard-icon">${s.icon}</span>
     <div class="scard-title">${s.label}</div>
@@ -417,27 +351,9 @@ for(let i=0;i<80;i++) pts.push({x:Math.random()*1920,y:Math.random()*1080,vx:(Ma
   requestAnimationFrame(drawCanvas);
 })();
 
-// ── NAV SCROLL ──
 window.addEventListener('scroll',()=>{
   document.querySelector('nav').style.background = window.scrollY>40 ? 'rgba(2,4,8,.96)' : 'rgba(2,4,8,.88)';
 });
-
-// ── API KEY ──
-function showModal(){ document.getElementById('api-modal').classList.add('show'); }
-function closeModal(){ document.getElementById('api-modal').classList.remove('show'); }
-function saveKey(){
-  const k = document.getElementById('api-key-input').value.trim();
-  if(k.length > 10){
-    userApiKey = k;
-    localStorage.setItem('xgpt_api_key', k);
-    closeModal();
-    showNotif('✅ API Key saved! AI ready!');
-  } else {
-    document.getElementById('api-key-input').style.borderColor='var(--pink)';
-    setTimeout(()=>document.getElementById('api-key-input').style.borderColor='rgba(0,212,255,.18)',1200);
-  }
-}
-// Gemini API hardcoded — no modal needed on first visit
 
 // ── PAGES ──
 function showHome(){
@@ -462,7 +378,6 @@ function startService(svc){
   document.getElementById('svc-title').textContent = svc.label;
   document.getElementById('msg-inp').placeholder = PLACEHOLDERS[svc.id]||'Type karo...';
 
-  // Quick prompts
   const qp = document.getElementById('qprompts');
   qp.innerHTML = '<span style="font-family:\'JetBrains Mono\',monospace;font-size:9px;color:#1a2a38;flex-shrink:0;">QUICK:</span>';
   (PROMPTS[svc.id]||[]).forEach(p=>{
@@ -472,8 +387,7 @@ function startService(svc){
     qp.appendChild(btn);
   });
 
-  // Welcome message
-  const welcome = `👋 **XGPT mein Khush Aaye!**\n\nMain **NEXUS** hoon — **${svc.label}** ke liye aapka AI expert.\n\nMain **asli kaam** karta hoon — poora professional output deta hoon, sirf explanation nahi.\n\n**Aap kya chahte hain?**\n- SEO ke liye: website URL share karein\n- Code ke liye: kya banana hai describe karein\n- Content ke liye: topic aur keywords dein\n- Automation ke liye: task describe karein\n\nBas type karein — main seconds mein deliver karta hoon ⚡\n\n✅ Delivered by XGPT | Powered by Zaheer Zaheer AI Systems`;
+  const welcome = `👋 **XGPT mein Khush Aaye!**\n\nMain **NEXUS** hoon — **${svc.label}** ke liye aapka AI expert.\n\nMain **asli kaam** karta hoon — poora professional output deta hoon, sirf explanation nahi.\n\nBas type karein — main seconds mein deliver karta hoon ⚡\n\n✅ Delivered by XGPT | Powered by Zaheer Zaheer AI Systems`;
   addBotMessage(welcome);
   document.getElementById('msg-inp').focus();
 }
@@ -559,7 +473,7 @@ async function sendMsg(){
     messages.push({role:'assistant',content:reply});
   } catch(e){
     removeTyping();
-    addBotMessage('⚠️ **Connection Error.** Please try again.\n\nAgain try karein ya internet check karein.');
+    addBotMessage('⚠️ **Connection Error.** Please try again.\n\nBackend server se connection nahi ho saka.');
   } finally {
     isBusy=false;
     setBusy(false);
@@ -576,51 +490,31 @@ function setBusy(b){
   spin.style.display = b?'block':'none';
 }
 
-// ── GEMINI API ──
-async function callAI(msgs){
-  const GEMINI_API_KEY = 'AIzaSyBA0OuB9b3n_hGhDG6JgJN7MGZu7rF9jIA';
-  const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+// ── FRONTEND SE API BILKUL KHATAM — AB YEH SEEDHA BACKEND SE CONNECT HOGA ──
+async function callAI(msgs) {
+  // TODO: Jab backend deploy ho jaye, to 'http://localhost:5000' ki jagah apna Render URL likh lena
+  const BACKEND_URL = 'http://localhost:5000'; 
+  const ENDPOINT = `${BACKEND_URL}/api/chat`;
 
-  // Build Gemini contents array from message history
-  const contents = msgs.slice(-10).map(m => ({
-    role: m.role === 'assistant' ? 'model' : 'user',
-    parts: [{ text: m.content }]
-  }));
-
-  const payload = {
-    system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-    contents: contents,
-    generationConfig: { maxOutputTokens: 1000 }
-  };
-
-  const res = await fetch(GEMINI_URL, {
+  const response = await fetch(ENDPOINT, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
+    body: JSON.stringify({ messages: msgs, service: currentSvc ? currentSvc.id : 'general' })
   });
 
-  if(!res.ok){
-    const err = await res.json().catch(()=>({}));
-    throw new Error(err.error?.message || 'Gemini API Error');
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.error || 'Server Error');
   }
 
-  const data = await res.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Response unavailable.';
+  const data = await response.json();
+  return data.reply || 'Response unavailable.';
 }
 
 // ── ENTER KEY ──
 document.getElementById('msg-inp').addEventListener('keydown', e=>{
   if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMsg(); }
 });
-
-// ── NOTIFICATION ──
-function showNotif(msg){
-  const el = document.createElement('div');
-  el.style.cssText='position:fixed;top:80px;right:20px;z-index:999;background:linear-gradient(135deg,#00d4ff,#00ff88);color:#000;padding:12px 20px;border-radius:10px;font-family:\'JetBrains Mono\',monospace;font-size:12px;font-weight:700;animation:fu .3s ease;box-shadow:0 0 30px rgba(0,212,255,.4);';
-  el.textContent=msg;
-  document.body.appendChild(el);
-  setTimeout(()=>el.remove(),3000);
-}
 </script>
 </body>
 </html>
